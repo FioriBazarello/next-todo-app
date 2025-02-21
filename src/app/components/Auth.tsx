@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { auth, googleProvider } from '../firebase/config';
 import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     signInWithPopup
 } from 'firebase/auth';
+import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 
 export default function Auth() {
     const [email, setEmail] = useState('');
@@ -43,78 +45,102 @@ export default function Auth() {
     };
 
     return (
-        <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-md mx-auto mt-8 p-6 bg-gray-800 rounded-lg shadow-xl"
+        >
             <form onSubmit={handleAuth} className="space-y-4">
                 <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-300">
                         Email
                     </label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        required
-                    />
+                    <div className="mt-1 relative">
+                        <EnvelopeIcon className="h-5 w-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                        <input
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="pl-10 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-gray-200"
+                            required
+                        />
+                    </div>
                 </div>
                 <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-300">
                         Senha
                     </label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        required
-                    />
+                    <div className="mt-1 relative">
+                        <LockClosedIcon className="h-5 w-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                        <input
+                            type="password"
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="pl-10 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-gray-200"
+                            required
+                        />
+                    </div>
                 </div>
-                {error && <p className="text-red-500 text-sm">{error}</p>}
+                {error && (
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-red-500 text-sm"
+                    >
+                        {error}
+                    </motion.p>
+                )}
                 <div className="flex items-center justify-between">
-                    <button
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         type="submit"
-                        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-4 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     >
                         {isRegistering ? 'Registrar' : 'Entrar'}
-                    </button>
-                    <button
+                    </motion.button>
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
                         type="button"
                         onClick={() => setIsRegistering(!isRegistering)}
-                        className="text-sm text-blue-500 hover:text-blue-700"
+                        className="text-sm text-emerald-400 hover:text-emerald-300"
                     >
                         {isRegistering ? 'Já tem uma conta? Entre' : 'Criar nova conta'}
-                    </button>
+                    </motion.button>
                 </div>
             </form>
 
             <div className="mt-6">
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-300" />
+                        <div className="w-full border-t border-gray-600" />
                     </div>
                     <div className="relative flex justify-center text-sm">
-                        <span className="px-2 bg-white text-gray-500">Ou continue com</span>
+                        <span className="px-2 bg-gray-800 text-gray-400">Ou continue com</span>
                     </div>
                 </div>
 
                 <div className="mt-6">
-                    <button
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         type="button"
                         onClick={handleGoogleSignIn}
-                        className="w-full flex items-center justify-center gap-3 px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        className="w-full flex items-center justify-center gap-3 px-4 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-sm font-medium text-gray-200 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
                     >
                         <Image
                             src="https://www.google.com/favicon.ico"
                             alt="Google"
                             width={20}
                             height={20}
+                            className="rounded"
                         />
                         Entrar com Google
-                    </button>
+                    </motion.button>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 } 

@@ -16,6 +16,8 @@ import {
     orderBy,
     Timestamp
 } from 'firebase/firestore';
+import { motion, AnimatePresence } from 'framer-motion';
+import { PlusIcon } from '@heroicons/react/24/solid';
 import Todo from './Todo';
 
 interface TodoItem {
@@ -108,31 +110,43 @@ export default function TodoList() {
     };
 
     return (
-        <div className="max-w-md mx-auto mt-8">
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="max-w-md mx-auto mt-8"
+        >
             {error && (
-                <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-4 p-4 bg-red-500/10 text-red-500 rounded-lg"
+                >
                     {error}
-                </div>
+                </motion.div>
             )}
-            <form onSubmit={addTodo} className="mb-4">
+
+            <form onSubmit={addTodo} className="mb-6">
                 <div className="flex gap-2">
                     <input
                         type="text"
                         value={newTodo}
                         onChange={(e) => setNewTodo(e.target.value)}
                         placeholder="Adicionar nova tarefa..."
-                        className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-500 bg-white"
+                        className="flex-1 p-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-200 placeholder-gray-500"
                     />
-                    <button
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         type="submit"
-                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-4 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 flex items-center gap-2"
                     >
+                        <PlusIcon className="h-5 w-5" />
                         Adicionar
-                    </button>
+                    </motion.button>
                 </div>
             </form>
 
-            <div className="space-y-2">
+            <AnimatePresence>
                 {todos.map(todo => (
                     <Todo
                         key={todo.id}
@@ -141,7 +155,7 @@ export default function TodoList() {
                         onDelete={deleteTodo}
                     />
                 ))}
-            </div>
-        </div>
+            </AnimatePresence>
+        </motion.div>
     );
 } 
