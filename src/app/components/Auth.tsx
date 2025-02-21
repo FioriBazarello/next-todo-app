@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { auth, googleProvider } from '../firebase/config';
 import {
@@ -8,17 +8,77 @@ import {
     createUserWithEmailAndPassword,
     signInWithPopup
 } from 'firebase/auth';
-import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline';
+import { EnvelopeIcon, LockClosedIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
+
+interface PasswordRequirement {
+    id: string;
+    label: string;
+    validator: (password: string, confirmPassword?: string) => boolean;
+}
+
+const passwordRequirements: PasswordRequirement[] = [
+    {
+        id: 'length',
+        label: 'Pelo menos 8 caracteres',
+        validator: (password) => password.length >= 8
+    },
+    {
+        id: 'uppercase',
+        label: 'Pelo menos uma letra maiúscula',
+        validator: (password) => /[A-Z]/.test(password)
+    },
+    {
+        id: 'lowercase',
+        label: 'Pelo menos uma letra minúscula',
+        validator: (password) => /[a-z]/.test(password)
+    },
+    {
+        id: 'number',
+        label: 'Pelo menos um número',
+        validator: (password) => /[0-9]/.test(password)
+    },
+    {
+        id: 'match',
+        label: 'Senhas coincidem',
+        validator: (password, confirmPassword) => password === confirmPassword && password !== ''
+    }
+];
 
 export default function Auth() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [isRegistering, setIsRegistering] = useState(false);
     const [error, setError] = useState('');
+    const [requirements, setRequirements] = useState<{ [key: string]: boolean }>({});
+
+    useEffect(() => {
+        const newRequirements = passwordRequirements.reduce((acc, req) => ({
+            ...acc,
+            [req.id]: req.validator(password, confirmPassword)
+        }), {});
+        setRequirements(newRequirements);
+    }, [password, confirmPassword]);
+
+    const allRequirementsMet = () => {
+        return passwordRequirements.every(req => requirements[req.id]);
+    };
 
     const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+
+        if (isRegistering) {
+            if (!allRequirementsMet()) {
+                setError('A senha não atende a todos os requisitos.');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                setError('As senhas não coincidem.');
+                return;
+            }
+        }
 
         try {
             if (isRegistering) {
@@ -28,6 +88,7 @@ export default function Auth() {
             }
             setEmail('');
             setPassword('');
+            setConfirmPassword('');
         } catch (err) {
             setError('Erro na autenticação. Verifique suas credenciais.');
             console.error(err);
@@ -82,6 +143,51 @@ export default function Auth() {
                         />
                     </div>
                 </div>
+
+                {isRegistering && (
+                    <>
+                        <div>
+                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300">
+                                Confirmar Senha
+                            </label>
+                            <div className="mt-1 relative">
+                                <LockClosedIcon className="h-5 w-5 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    className="pl-10 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-gray-200"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="mt-4 space-y-2">
+                            <h3 className="text-sm font-medium text-gray-300">Requisitos da senha:</h3>
+                            <ul className="space-y-2">
+                                {passwordRequirements.map((req) => (
+                                    <motion.li
+                                        key={req.id}
+                                        initial={false}
+                                        animate={{ opacity: 1 }}
+                                        className="flex items-center gap-2 text-sm"
+                                    >
+                                        {requirements[req.id] ? (
+                                            <CheckCircleIcon className="h-5 w-5 text-emerald-500" />
+                                        ) : (
+                                            <XCircleIcon className="h-5 w-5 text-red-500" />
+                                        )}
+                                        <span className={requirements[req.id] ? 'text-emerald-500' : 'text-red-500'}>
+                                            {req.label}
+                                        </span>
+                                    </motion.li>
+                                ))}
+                            </ul>
+                        </div>
+                    </>
+                )}
+
                 {error && (
                     <motion.p
                         initial={{ opacity: 0 }}
@@ -96,14 +202,19 @@ export default function Auth() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         type="submit"
-                        className="px-4 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="px-4 py-2 bg-emerald-600 text-gray-100 rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium shadow-lg"
                     >
                         {isRegistering ? 'Registrar' : 'Entrar'}
                     </motion.button>
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         type="button"
-                        onClick={() => setIsRegistering(!isRegistering)}
+                        onClick={() => {
+                            setIsRegistering(!isRegistering);
+                            setError('');
+                            setPassword('');
+                            setConfirmPassword('');
+                        }}
                         className="text-sm text-emerald-400 hover:text-emerald-300"
                     >
                         {isRegistering ? 'Já tem uma conta? Entre' : 'Criar nova conta'}

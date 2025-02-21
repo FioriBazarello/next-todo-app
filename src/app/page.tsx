@@ -46,7 +46,7 @@ export default function Home() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="px-4 py-2 bg-emerald-600 text-gray-100 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium shadow-lg"
             >
               Entrar
             </motion.button>
@@ -82,7 +82,7 @@ export default function Home() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 flex items-center justify-center gap-2 text-lg font-medium"
+                className="px-8 py-4 bg-emerald-600 text-gray-100 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 flex items-center justify-center gap-2 text-lg font-medium shadow-lg"
               >
                 Começar agora
                 <ArrowRightIcon className="h-5 w-5" />
