@@ -109,6 +109,13 @@ export default function TodoList() {
         }
     };
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (value.length <= 100) {
+            setNewTodo(value);
+        }
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -127,18 +134,24 @@ export default function TodoList() {
 
             <form onSubmit={addTodo} className="mb-6">
                 <div className="flex gap-2">
-                    <input
-                        type="text"
-                        value={newTodo}
-                        onChange={(e) => setNewTodo(e.target.value)}
-                        placeholder="Adicionar nova tarefa..."
-                        className="flex-1 p-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-200 placeholder-gray-500"
-                    />
+                    <div className="flex-1">
+                        <input
+                            type="text"
+                            value={newTodo}
+                            onChange={handleInputChange}
+                            placeholder="Adicionar nova tarefa..."
+                            className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-200 placeholder-gray-500"
+                            maxLength={100}
+                        />
+                        <div className="mt-1 text-right text-sm text-gray-500">
+                            {newTodo.length}/100 caracteres
+                        </div>
+                    </div>
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         type="submit"
-                        className="px-4 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 flex items-center gap-2"
+                        className="px-4 py-3 bg-emerald-600 text-gray-100 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 flex items-center gap-2 font-medium shadow-lg"
                     >
                         <PlusIcon className="h-5 w-5" />
                         Adicionar

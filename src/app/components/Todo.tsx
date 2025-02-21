@@ -18,12 +18,12 @@ export default function Todo({ id, text, completed, onToggle, onDelete }: TodoPr
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             whileHover={{ scale: 1.02 }}
-            className="flex items-center justify-between p-4 bg-gray-800 rounded-lg shadow-lg mb-2 group"
+            className="flex items-start justify-between p-4 bg-gray-800 rounded-lg shadow-lg mb-2 group"
         >
-            <div className="flex items-center flex-1">
+            <div className="flex items-start flex-1 min-w-0">
                 <motion.div
                     whileTap={{ scale: 0.9 }}
-                    className="relative w-5 h-5"
+                    className="relative w-5 h-5 mt-1"
                     onClick={() => onToggle(id)}
                 >
                     <input
@@ -44,7 +44,13 @@ export default function Todo({ id, text, completed, onToggle, onDelete }: TodoPr
                         )}
                     </div>
                 </motion.div>
-                <span className={`ml-3 ${completed ? 'line-through text-gray-500' : 'text-gray-200'} transition-colors`}>
+                <span className={`ml-3 ${completed ? 'line-through text-gray-500' : 'text-gray-200'} transition-colors break-words overflow-hidden`}
+                    style={{
+                        maxWidth: 'calc(100% - 2rem)',
+                        wordBreak: 'break-word',
+                        whiteSpace: 'pre-wrap'
+                    }}
+                >
                     {text}
                 </span>
             </div>
@@ -52,7 +58,7 @@ export default function Todo({ id, text, completed, onToggle, onDelete }: TodoPr
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => onDelete(id)}
-                className="text-gray-500 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                className="text-gray-500 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all ml-4 flex-shrink-0"
             >
                 <TrashIcon className="h-5 w-5" />
             </motion.button>
