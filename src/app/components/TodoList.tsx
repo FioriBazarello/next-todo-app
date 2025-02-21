@@ -133,7 +133,7 @@ export default function TodoList() {
             )}
 
             <form onSubmit={addTodo} className="mb-6">
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-start">
                     <div className="flex-1">
                         <input
                             type="text"
@@ -148,13 +148,13 @@ export default function TodoList() {
                         </div>
                     </div>
                     <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
                         type="submit"
-                        className="px-4 py-3 bg-emerald-600 text-gray-100 rounded-lg hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 flex items-center gap-2 font-medium shadow-lg"
+                        className="w-12 h-12 bg-emerald-600 text-gray-100 rounded-full hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 flex items-center justify-center shadow-lg flex-shrink-0"
+                        title="Adicionar tarefa"
                     >
-                        <PlusIcon className="h-5 w-5" />
-                        Adicionar
+                        <PlusIcon className="h-6 w-6" />
                     </motion.button>
                 </div>
             </form>
