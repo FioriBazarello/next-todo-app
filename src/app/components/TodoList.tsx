@@ -17,7 +17,7 @@ import {
     Timestamp
 } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PlusIcon } from '@heroicons/react/24/solid';
+import { PlusIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
 import Todo from './Todo';
 
 interface TodoItem {
@@ -33,6 +33,10 @@ export default function TodoList() {
     const [newTodo, setNewTodo] = useState('');
     const [user] = useAuthState(auth);
     const [error, setError] = useState<string>('');
+    const [showCompleted, setShowCompleted] = useState(false);
+
+    const incompleteTodos = todos.filter(todo => !todo.completed);
+    const completedTodos = todos.filter(todo => todo.completed);
 
     useEffect(() => {
         if (!user) {
@@ -160,7 +164,7 @@ export default function TodoList() {
             </form>
 
             <AnimatePresence>
-                {todos.map(todo => (
+                {incompleteTodos.map(todo => (
                     <Todo
                         key={todo.id}
                         {...todo}
@@ -169,6 +173,49 @@ export default function TodoList() {
                     />
                 ))}
             </AnimatePresence>
+
+            {completedTodos.length > 0 && (
+                <div className="mt-8">
+                    <motion.button
+                        onClick={() => setShowCompleted(!showCompleted)}
+                        className="w-full flex items-center justify-between p-4 bg-gray-800/80 rounded-lg text-gray-300 hover:bg-gray-800 transition-colors group"
+                    >
+                        <span className="font-medium">
+                            Tarefas concluídas ({completedTodos.length})
+                        </span>
+                        <motion.div
+                            animate={{ rotate: showCompleted ? 180 : 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="text-gray-400 group-hover:text-gray-300 transition-colors"
+                        >
+                            <ChevronDownIcon className="h-5 w-5" />
+                        </motion.div>
+                    </motion.button>
+
+                    <AnimatePresence>
+                        {showCompleted && (
+                            <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="overflow-hidden"
+                            >
+                                <div className="pt-2">
+                                    {completedTodos.map(todo => (
+                                        <Todo
+                                            key={todo.id}
+                                            {...todo}
+                                            onToggle={toggleTodo}
+                                            onDelete={deleteTodo}
+                                        />
+                                    ))}
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            )}
         </motion.div>
     );
 } 
