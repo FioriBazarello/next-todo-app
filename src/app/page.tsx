@@ -5,9 +5,19 @@ import { auth } from './firebase/config';
 import TodoList from './components/TodoList';
 import Auth from './components/Auth';
 import Header from './components/Header';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const [user, loading] = useAuthState(auth);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null;
+  }
 
   if (loading) {
     return (
