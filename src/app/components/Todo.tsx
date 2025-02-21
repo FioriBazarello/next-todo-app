@@ -23,23 +23,26 @@ export default function Todo({ id, text, completed, onToggle, onDelete }: TodoPr
             <div className="flex items-center flex-1">
                 <motion.div
                     whileTap={{ scale: 0.9 }}
-                    className="relative"
+                    className="relative w-5 h-5"
+                    onClick={() => onToggle(id)}
                 >
                     <input
                         type="checkbox"
                         checked={completed}
-                        onChange={() => onToggle(id)}
-                        className="w-5 h-5 accent-emerald-500 rounded border-gray-600 bg-gray-700 cursor-pointer"
+                        onChange={() => { }}
+                        className="absolute inset-0 w-5 h-5 accent-emerald-500 rounded border-gray-600 bg-gray-700 cursor-pointer opacity-0"
                     />
-                    {completed && (
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="absolute inset-0 flex items-center justify-center"
-                        >
-                            <span className="text-emerald-500">✓</span>
-                        </motion.div>
-                    )}
+                    <div className="absolute inset-0 w-5 h-5 rounded border border-gray-600 bg-gray-700">
+                        {completed && (
+                            <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className="absolute inset-0 flex items-center justify-center text-emerald-500"
+                            >
+                                ✓
+                            </motion.div>
+                        )}
+                    </div>
                 </motion.div>
                 <span className={`ml-3 ${completed ? 'line-through text-gray-500' : 'text-gray-200'} transition-colors`}>
                     {text}
