@@ -36,4 +36,6 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
           channelId: live
-          projectId: nexttodoapp-dbe26 
+          projectId: nexttodoapp-dbe26
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks 
