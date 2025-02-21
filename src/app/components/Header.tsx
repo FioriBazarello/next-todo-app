@@ -12,7 +12,7 @@ export default function Header() {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
                         <h1 className="text-2xl font-bold text-blue-600">
-                            ✓ TodoApp
+                            ✓ Minhas Tarefas
                         </h1>
                     </div>
 
